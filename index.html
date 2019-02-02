@@ -20,20 +20,14 @@
 		<title>Taskigo</title>
 		<meta name="description" content="Easy, fast and efficient Personal Task Management.">
 		<meta name="author" content="Ronen Ness">
+		<meta name="keywords" content = "productivity, tasks, projects, management, notes, time management">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
-		<link rel="stylesheet" href="css/bootstrap-glyphicons.css">
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/dragula.min.css">
-		<link id="bootstrap-theme" rel="stylesheet" href="css/bootstrap-theme.min.css">
-		<link rel="stylesheet" href="css/main.min.css">
+		<link rel="stylesheet" href="dist/bundle.min.css">
+		<link id="bootstrap-theme" rel="stylesheet" href="dist/bootstrap-theme.min.css">
 
 		<script src="client_config.js"></script>
-		<script src="js/vendor/jquery-1.11.2.min.js"></script>
-		<script src="js/vendor/jquery.cookie.min.js"></script>
-		<script src="js/vendor/bootstrap.min.js"></script>
-		<script src="js/vendor/dragula.min.js"></script>
-		<script src="js/vendor/bootbox.min.js"></script>
+		<script src="dist/vendors.js"></script>
 
 		<link rel="icon" type="image/png" href="icon.png" />
 
@@ -177,7 +171,7 @@
 		</div>
 
 		<!-- snackbar -->
-		<div id="snackbar"><div id="snackbar-text" class="alert alert-primary" role="alert">Snackbar Text</div></div>
+		<div id="snackbar" style="z-index: 10000;"><div id="snackbar-text" class="alert alert-primary" role="alert">Snackbar Text</div></div>
 
 		<!-- handle card description change -->
 		<script>
@@ -190,7 +184,7 @@
 		</script>
 
 		<!-- import main code script -->
-		<script src="js/dist/bundle.js"></script>
+		<script src="dist/bundle.js"></script>
 
 	</body>
 </html>
