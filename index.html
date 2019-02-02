@@ -1,0 +1,195 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+	<head>
+
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43062336-11"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-43062336-11');
+		</script>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Taskigo</title>
+		<meta name="description" content="Easy, fast and efficient Personal Task Management.">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<link rel="stylesheet" href="css/bootstrap-glyphicons.css">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/dragula.min.css">
+		<link id="bootstrap-theme" rel="stylesheet" href="css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="css/main.min.css">
+
+		<script src="client_config.js"></script>
+		<script src="js/vendor/jquery-1.11.2.min.js"></script>
+		<script src="js/vendor/jquery.cookie.min.js"></script>
+		<script src="js/vendor/bootstrap.min.js"></script>
+		<script src="js/vendor/dragula.min.js"></script>
+		<script src="js/vendor/bootbox.min.js"></script>
+
+		<link rel="icon" type="image/png" href="icon.png" />
+
+		<!--[if lt IE 9]>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+				<script>window.html5 || document.write('<script src="js/vendor/html5shiv.js"><\/script>')</script>
+		<![endif]-->
+	</head>
+	<body>
+
+		<!-- tasks container -->
+		<div id="main-div" class="container-fluid" style="display: none;">
+			<div class="row tasks-row">
+				
+					<!-- left cards column -->
+					<div id="left-column-outter-div" class="col-md-4">
+
+						<!-- button to add a new card -->
+						<button type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('left');">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+						</button><span>&nbsp;&nbsp;</span>
+
+						<!-- column header -->
+						<h2 class="card-title cards-column-title">
+							<input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Left Column" />
+						</h2>
+
+						<!-- contain the actual cards -->
+						<div id="left-column" class="cards-container tasks-column">
+
+							<!-- a new card prototype (removed once page loads) -->	
+							<div class="card" id="cards-prototype">
+
+								<!-- priority color stripe -->
+								<div id="card-color" style="width:10px; height:100%; position:absolute; display: block; cursor: pointer" class="btn-light" onclick="Taskigo.show_card_color_selection(this);"></div>
+
+								<!-- card body -->
+								<div class="card-body">
+									<h5 class="card-title"><input class="card-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Card Title" /></h5>
+									<div class="card-text">
+										<div class="card-textarea" contentEditable="true" onkeyup="card_input_change(this);"></div>
+										<p class="placeholder">Card description</p>
+									</div>
+									
+									<!-- delete button -->
+									<button type="button" style="position:absolute; top:0px; right:0px;" class="btn btn-link" onclick="Taskigo.remove_card($(this).parent().parent());">
+										<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+									</button>
+
+									<!-- card deadline div (hidden unless there's a deadline) -->
+									<br />
+									<div class="deadline-div" style="width: 100%; display: inline-table; float:right;">
+
+										<!-- progressbar showing deadline time left -->
+										<div class="progress" style="width:calc(100% - 80px); display:inline-block; height:30px; background:#797676">
+											<div class="card-deadline-data" style="display:none;" data-deadline="0"></div>
+											<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; height: 100%;"></div>
+										</div>
+													
+										<!-- deadline buttons -->
+										<div style="float:right;">
+
+											<!-- button to add time to deadline -->
+											<a href="#" class="btn btn-primary btn-sm" style="height: 30px;" onclick="$(this).parent().parent().find('.add-time-buttons').toggle();">
+												<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+											</a>
+
+											<!-- button to clear deadline -->
+											<a href="#" class="btn btn-success btn-sm" style="height: 30px;" onclick="Taskigo.add_time_to_card(this, -1000000000000000000000);">
+												<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+											</a>
+										</div>
+										<div style="clear:both;"></div>
+
+										<!-- show deadline date and time -->
+										<p class="deadline-text" style="margin: 0; position: absolute; margin-top: -34px; margin-left:10px; color:white;"></p>
+
+										<!-- buttons to add time -->
+										<div class="add-time-buttons" style="display: none;">
+											<a class="hide-sm hide-md" href="#" onclick="Taskigo.add_time_to_card(this, 10);">+10 Mins &nbsp;&nbsp;</a>
+											<a href="#" onclick="Taskigo.add_time_to_card(this, 60);">+Hour &nbsp;&nbsp;</a>
+											<a href="#" onclick="Taskigo.add_time_to_card(this, 60*24);">+Day &nbsp;&nbsp;</a>
+											<a class="hide-sm" href="#" onclick="Taskigo.add_time_to_card(this, 60*24*7);">+Week &nbsp;&nbsp;</a>
+											<a href="#" onclick="Taskigo.add_time_to_card(this, 60*24*30);">+Month &nbsp;&nbsp;</a>
+										</div>
+									</div>
+									<div style="clear:both;"></div>
+								</div>
+							</div>
+						</div>
+						<br /><br />
+					</div>
+					
+					<!-- center cards column -->
+					<div id="center-column-outter-div" class="col-md-4">
+						
+						<!-- button to add a new card -->
+						<button type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('center');">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+						</button><span>&nbsp;&nbsp;</span>
+
+						<!-- column header -->
+						<h2 class="card-title cards-column-title"><input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Center Column" /></h2>
+						
+						<!-- contain the actual cards -->
+						<div id="center-column" class="cards-container tasks-column"></div>
+						<br /><br />
+					</div>
+
+					<!-- right cards column -->
+					<div id="right-column-outter-div" class="col-md-4">
+
+						<!-- button to add a new card -->
+						<button type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('right');">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+						</button><span>&nbsp;&nbsp;</span>
+
+						<!-- column header -->
+						<h2 class="card-title cards-column-title"><input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Right Column" /></h2>
+
+						<!-- contain the actual cards -->
+						<div id="right-column" class="cards-container tasks-column"></div>
+						<br /><br />
+					</div>
+				
+			</div>
+		</div>
+
+		<!-- color selection menu for cards-->
+		<div id="card-color-selection" style="position:fixed; display:none; width:100%; height:100%; z-index:1000; background: #00000022" onclick="$(this).hide(); Taskigo.stop_color_selection;">
+			<div id="card-color-selection-int-div" style="position: fixed;">
+				<button type="button" class="btn btn-primary" onclick="Taskigo.select_color_for_card('primary');">&nbsp;</button><br />
+				<button type="button" class="btn btn-secondary" onclick="Taskigo.select_color_for_card('secondary');">&nbsp;</button><br />
+				<button type="button" class="btn btn-success" onclick="Taskigo.select_color_for_card('success');">&nbsp;</button><br />
+				<button type="button" class="btn btn-danger" onclick="Taskigo.select_color_for_card('danger');">&nbsp;</button><br />
+				<button type="button" class="btn btn-warning" onclick="Taskigo.select_color_for_card('warning');">&nbsp;</button><br />
+				<button type="button" class="btn btn-info" onclick="Taskigo.select_color_for_card('info');">&nbsp;</button><br />
+				<button type="button" class="btn btn-light" onclick="Taskigo.select_color_for_card('light');">&nbsp;</button><br />
+				<button type="button" class="btn btn-dark" onclick="Taskigo.select_color_for_card('dark');">&nbsp;</button>
+			</div>
+		</div>
+
+		<!-- snackbar -->
+		<div id="snackbar"><div id="snackbar-text" class="alert alert-primary" role="alert">Snackbar Text</div></div>
+
+		<!-- handle card description change -->
+		<script>
+			function card_input_change(cardTextElem)
+			{
+				Taskigo.request_timely_save();
+				var placeholder = $(cardTextElem).parent().find('.placeholder'); 
+				if ($(cardTextElem).text() == "") { placeholder.show(); } else placeholder.hide();
+			}
+		</script>
+
+		<!-- import main code script -->
+		<script src="js/dist/bundle.js"></script>
+
+	</body>
+</html>
