@@ -62,13 +62,13 @@
 							<div class="card" id="cards-prototype">
 
 								<!-- priority color stripe -->
-								<div id="card-color" style="width:10px; height:100%; position:absolute; display: block; cursor: pointer" class="btn-light" onclick="Taskigo.show_card_color_selection(this);"></div>
+								<div id="card-color" style="width:12px; height:100%; position:absolute; display: block; cursor: pointer" class="btn-light" onclick="Taskigo.show_card_color_selection(this);"></div>
 
 								<!-- card body -->
 								<div class="card-body">
-									<h5 class="card-title"><input class="card-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Card Title" /></h5>
-									<div class="card-text">
-										<div class="card-textarea" contentEditable="true" onkeyup="card_input_change(this);"></div>
+									<h5 class="card-title"><input class="card-title-input transparent heavy" maxlength="46" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Card Title" /></h5>
+									<div class="card-text limited-div-height">
+										<div class="card-textarea card-description-input" contentEditable="true"></div>
 										<p class="placeholder">Card description</p>
 									</div>
 									
@@ -84,26 +84,26 @@
 										<!-- progressbar showing deadline time left -->
 										<div class="progress" style="width:calc(100% - 80px); display:inline-block; height:30px; background:#797676">
 											<div class="card-deadline-data" style="display:none;" data-deadline="0"></div>
-											<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; height: 100%;"></div>
+											<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; height: 100%; background-repeat: inherit;"></div>
 										</div>
 													
 										<!-- deadline buttons -->
 										<div style="float:right;">
 
 											<!-- button to add time to deadline -->
-											<a href="#" class="btn btn-primary btn-sm" style="height: 30px;" onclick="$(this).parent().parent().find('.add-time-buttons').toggle();">
+											<button href="#" class="btn btn-primary btn-sm" style="height: 30px;" onclick="$(this).parent().parent().find('.add-time-buttons').toggle();">
 												<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-											</a>
+											</button>
 
 											<!-- button to clear deadline -->
-											<a href="#" class="btn btn-success btn-sm" style="height: 30px;" onclick="Taskigo.add_time_to_card(this, -1000000000000000000000);">
+											<button href="#" class="btn btn-success btn-sm btn-end-deadline" disabled style="height: 30px;" onclick="Taskigo.add_time_to_card(this, -1000000000000000000000);">
 												<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-											</a>
+											</button>
 										</div>
 										<div style="clear:both;"></div>
 
 										<!-- show deadline date and time -->
-										<p class="deadline-text" style="margin: 0; position: absolute; margin-top: -34px; margin-left:10px; color:white;"></p>
+										<p class="deadline-text" style="margin: 0; position: absolute; margin-top: -34px; margin-left:10px; color:white;">No Deadline</p>
 
 										<!-- buttons to add time -->
 										<div class="add-time-buttons" style="display: none;">
@@ -115,6 +115,9 @@
 										</div>
 									</div>
 									<div style="clear:both;"></div>
+
+									<!-- handle to resize card -->
+									<div style="position:relative; width: 100%; height: 10px; margin: 0px; margin-bottom:-14px; cursor: row-resize;" onclick="$(this).parent().find('.card-text').toggleClass('limited-div-height')"></div>
 								</div>
 							</div>
 						</div>
@@ -172,16 +175,6 @@
 
 		<!-- snackbar -->
 		<div id="snackbar" style="z-index: 10000;"><div id="snackbar-text" class="alert alert-primary" role="alert">Snackbar Text</div></div>
-
-		<!-- handle card description change -->
-		<script>
-			function card_input_change(cardTextElem)
-			{
-				Taskigo.request_timely_save();
-				var placeholder = $(cardTextElem).parent().find('.placeholder'); 
-				if ($(cardTextElem).text() == "") { placeholder.show(); } else placeholder.hide();
-			}
-		</script>
 
 		<!-- import main code script -->
 		<script src="dist/bundle.js"></script>

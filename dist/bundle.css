@@ -256,6 +256,13 @@ input[type="text"].transparent
     min-height: 25px;
 }
 
+/* card text container */
+.limited-div-height
+{
+    max-height: 400px;
+    overflow: auto;
+}
+
 /* white text with black outline */
 .white-with-outline
 {
