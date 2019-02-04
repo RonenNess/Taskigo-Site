@@ -42,3 +42,145 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
  * Released under the MIT license
  */
 !function(e){"function"==typeof define&&define.amd?define(["jquery"],e):"object"==typeof exports?e(require("jquery")):e(jQuery)}(function(e){var o=/\+/g;function n(e){return r.raw?e:encodeURIComponent(e)}function i(n,i){var t=r.raw?n:function(e){0===e.indexOf('"')&&(e=e.slice(1,-1).replace(/\\"/g,'"').replace(/\\\\/g,"\\"));try{return e=decodeURIComponent(e.replace(o," ")),r.json?JSON.parse(e):e}catch(e){}}(n);return e.isFunction(i)?i(t):t}var r=e.cookie=function(o,t,c){if(void 0!==t&&!e.isFunction(t)){if("number"==typeof(c=e.extend({},r.defaults,c)).expires){var u=c.expires,a=c.expires=new Date;a.setTime(+a+864e5*u)}return document.cookie=[n(o),"=",(d=t,n(r.json?JSON.stringify(d):String(d))),c.expires?"; expires="+c.expires.toUTCString():"",c.path?"; path="+c.path:"",c.domain?"; domain="+c.domain:"",c.secure?"; secure":""].join("")}for(var d,f,p=o?void 0:{},s=document.cookie?document.cookie.split("; "):[],m=0,v=s.length;m<v;m++){var x=s[m].split("="),k=(f=x.shift(),r.raw?f:decodeURIComponent(f)),l=x.join("=");if(o&&o===k){p=i(l,t);break}o||void 0===(l=i(l))||(p[k]=l)}return p};r.defaults={},e.removeCookie=function(o,n){return void 0!==e.cookie(o)&&(e.cookie(o,"",e.extend({},n,{expires:-1})),!e.cookie(o))}});
+
+// MODIFIED VERSION OF TLITE
+// ADDED DELAY BEFORE SHOWING + using data tlite-text instead of title.
+
+var _timeout = null;
+function tlite(getTooltipOpts) {
+    document.addEventListener('mouseover', function (e) {
+
+        if (_timeout) { clearTimeout(_timeout); }
+        _timeout = setTimeout(function() {
+            var el = e.target;
+            var opts = getTooltipOpts(el);
+        
+            if (!opts) {
+                el = el.parentElement;
+                opts = el && getTooltipOpts(el);
+            }
+        
+            opts && tlite.show(el, opts, true);
+            }, 1000);
+    });
+  }
+  
+  tlite.show = function (el, opts, isAuto) {
+    var fallbackAttrib = 'data-tlite';
+    opts = opts || {};
+  
+    (el.tooltip || Tooltip(el, opts)).show();
+  
+    function Tooltip(el, opts) {
+      var tooltipEl;
+      var showTimer;
+      var text;
+  
+      el.addEventListener('mousedown', autoHide);
+      el.addEventListener('mouseleave', autoHide);
+  
+      function show() {
+        text = el.dataset.title || el.getAttribute(fallbackAttrib) || text;
+        el.setAttribute(fallbackAttrib, '');
+        text && !showTimer && (showTimer = setTimeout(fadeIn, isAuto ? 150 : 1))
+      }
+  
+      function autoHide() {
+        tlite.hide(el, true);
+      }
+  
+      function hide(isAutoHiding) {
+        if (isAuto === isAutoHiding) {
+          showTimer = clearTimeout(showTimer);
+          var parent = tooltipEl && tooltipEl.parentNode;
+          parent && parent.removeChild(tooltipEl);
+          tooltipEl = undefined;
+        }
+      }
+  
+      function fadeIn() {
+        if (!tooltipEl) {
+          tooltipEl = createTooltip(el, text, opts);
+        }
+      }
+  
+      return el.tooltip = {
+        show: show,
+        hide: hide
+      };
+    }
+  
+    function createTooltip(el, text, opts) {
+      var tooltipEl = document.createElement('span');
+      var grav = opts.grav || el.getAttribute('data-tlite') || 'n';
+  
+      tooltipEl.innerHTML = text;
+  
+      el.appendChild(tooltipEl);
+  
+      var vertGrav = grav[0] || '';
+      var horzGrav = grav[1] || '';
+  
+      function positionTooltip() {
+        tooltipEl.className = 'tlite ' + 'tlite-' + vertGrav + horzGrav;
+  
+        var arrowSize = 10;
+        var top = el.offsetTop;
+        var left = el.offsetLeft;
+  
+        if (tooltipEl.offsetParent === el) {
+          top = left = 0;
+        }
+  
+        var width = el.offsetWidth;
+        var height = el.offsetHeight;
+        var tooltipHeight = tooltipEl.offsetHeight;
+        var tooltipWidth = tooltipEl.offsetWidth;
+        var centerEl = left + (width / 2);
+  
+        tooltipEl.style.top = (
+          vertGrav === 's' ? (top - tooltipHeight - arrowSize) :
+          vertGrav === 'n' ? (top + height + arrowSize) :
+          (top + (height / 2) - (tooltipHeight / 2))
+        ) + 'px';
+  
+        tooltipEl.style.left = (
+          horzGrav === 'w' ? left :
+          horzGrav === 'e' ? left + width - tooltipWidth :
+          vertGrav === 'w' ? (left + width + arrowSize) :
+          vertGrav === 'e' ? (left - tooltipWidth - arrowSize) :
+          (centerEl - tooltipWidth / 2)
+        ) + 'px';
+      }
+  
+      positionTooltip();
+  
+      var rect = tooltipEl.getBoundingClientRect();
+  
+      if (vertGrav === 's' && rect.top < 0) {
+        vertGrav = 'n';
+        positionTooltip();
+      } else if (vertGrav === 'n' && rect.bottom > window.innerHeight) {
+        vertGrav = 's';
+        positionTooltip();
+      } else if (vertGrav === 'e' && rect.left < 0) {
+        vertGrav = 'w';
+        positionTooltip();
+      } else if (vertGrav === 'w' && rect.right > window.innerWidth) {
+        vertGrav = 'e';
+        positionTooltip();
+      }
+  
+      tooltipEl.className += ' tlite-visible';
+  
+      return tooltipEl;
+    }
+  };
+  
+  tlite.hide = function (el, isAuto) {
+    el.tooltip && el.tooltip.hide(isAuto);
+  };
+  
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = tlite;
+  }

@@ -91,12 +91,12 @@
 										<div style="float:right;">
 
 											<!-- button to add time to deadline -->
-											<button href="#" class="btn btn-primary btn-sm" style="height: 30px;" onclick="$(this).parent().parent().find('.add-time-buttons').toggle();">
+											<button data-title="Open menu to edit deadline." href="#" class="btn btn-primary btn-sm" style="height: 30px;" onclick="$(this).parent().parent().find('.add-time-buttons').toggle();">
 												<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 											</button>
 
 											<!-- button to clear deadline -->
-											<button href="#" class="btn btn-success btn-sm btn-end-deadline" disabled style="height: 30px;" onclick="Taskigo.add_time_to_card(this, -1000000000000000000000);">
+											<button data-title="Clear deadline." href="#" class="btn btn-success btn-sm btn-end-deadline" disabled style="height: 30px;" onclick="Taskigo.add_time_to_card(this, -1000000000000000000000);">
 												<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 											</button>
 										</div>
@@ -107,11 +107,11 @@
 
 										<!-- buttons to add time -->
 										<div class="add-time-buttons" style="display: none;">
-											<a class="hide-sm hide-md" href="#" onclick="Taskigo.add_time_to_card(this, 10);">+10 Mins &nbsp;&nbsp;</a>
-											<a href="#" onclick="Taskigo.add_time_to_card(this, 60);">+Hour &nbsp;&nbsp;</a>
-											<a href="#" onclick="Taskigo.add_time_to_card(this, 60*24);">+Day &nbsp;&nbsp;</a>
-											<a class="hide-sm" href="#" onclick="Taskigo.add_time_to_card(this, 60*24*7);">+Week &nbsp;&nbsp;</a>
-											<a href="#" onclick="Taskigo.add_time_to_card(this, 60*24*30);">+Month &nbsp;&nbsp;</a>
+											<a data-title="Add 10 minutes to deadline." class="hide-sm hide-md" href="#" onclick="Taskigo.add_time_to_card(this, 10);">+10 Mins &nbsp;&nbsp;</a>
+											<a data-title="Add 1 hour to deadline." href="#" onclick="Taskigo.add_time_to_card(this, 60);">+Hour &nbsp;&nbsp;</a>
+											<a data-title="Add 1 day to deadline." href="#" onclick="Taskigo.add_time_to_card(this, 60*24);">+Day &nbsp;&nbsp;</a>
+											<a data-title="Add 1 week to deadline." class="hide-sm" href="#" onclick="Taskigo.add_time_to_card(this, 60*24*7);">+Week &nbsp;&nbsp;</a>
+											<a data-title="Add 1 month to deadline." href="#" onclick="Taskigo.add_time_to_card(this, 60*24*30);">+Month &nbsp;&nbsp;</a>
 										</div>
 									</div>
 									<div style="clear:both;"></div>
@@ -178,6 +178,13 @@
 
 		<!-- import main code script -->
 		<script src="dist/bundle.js"></script>
+
+		<!-- init tlite tooltip -->
+		<script>
+			tlite(function(el) {
+				return $(el).data('title');
+			});
+		</script>
 
 	</body>
 </html>
