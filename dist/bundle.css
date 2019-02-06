@@ -346,13 +346,49 @@ a:hover
     font-weight: 500;
 }
 
+/* main options button */
+.options-button 
+{ 
+    transition: all .2s ease-in-out; 
+    width:60px; 
+    height:60px; 
+    position:fixed; 
+    z-index:100000; 
+    right:20px; 
+    bottom:20px; 
+    cursor:pointer;
+    background-color: #ccc;
+    border: 1px solid transparent;    
+    -webkit-transition: border 0.1s linear, box-shadow 0.1s linear;
+       -moz-transition: border 0.1s linear, box-shadow 0.1s linear;
+            transition: border 0.1s linear, box-shadow 0.1s linear;
+}
+.options-button:hover 
+{ 
+    transform: scale(1.1); 
+    border-color: blue;
+    -webkit-box-shadow: 0 0 5px blue;
+       -moz-box-shadow: 0 0 5px blue;
+            box-shadow: 0 0 5px blue;
+}
+
+/* icon image integrated inside text */
+.icon-in-text {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+.icon-in-text-lg {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+}
+
 /* snackbar for messages */
 #snackbar {
     visibility: hidden;
     min-width: 250px;
     margin-left: -125px;
-    /* background-color: #333; */
-    /* color: #fff; */
     text-align: center;
     border-radius: 2px;
     padding: 16px;

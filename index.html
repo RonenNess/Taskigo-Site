@@ -38,6 +38,54 @@
 	</head>
 	<body>
 
+		<!-- options button -->
+		<img data-title="Open options menu." src="icon.png" class="options-button" data-toggle="modal" data-target="#optionsModal" />
+		
+		<!-- options menu -->
+		<div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Options</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="container">
+							<ul class="nav nav-tabs">
+								<li class="active"><a data-toggle="tab" class="nav-item nav-link active" href="#opt-exports">Exports</a></li>
+								<li><a data-toggle="tab" class="nav-item nav-link" href="#opt-display">Display</a></li>
+								<li><a data-toggle="tab" class="nav-item nav-link" href="#opt-boards">Boards</a></li>
+								<li><a data-toggle="tab" class="nav-item nav-link" href="#opt-help">Help</a></li>
+							</ul>
+							<br />
+							<div class="tab-content">
+								<div id="opt-exports" class="tab-pane in active">
+									<p>Export / Import allow you to migrate boards between different machines, by using files. <br />Its also a great way to create backups.</p>
+									<button type="button" class="btn btn-success">Export Board</button>
+									<button type="button" class="btn btn-danger">Import Board</button>
+									<p>TODO NOT READY YET.</p>
+								</div>
+								<div id="opt-display" class="tab-pane fade">
+									<p>TODO NOT READY YET.</p>
+								</div>
+								<div id="opt-boards" class="tab-pane fade">
+									<p>TODO NOT READY YET.</p>
+								</div>
+								<div id="opt-help" class="tab-pane fade">
+									<p>TODO NOT READY YET.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Done</button>
+					</div>
+				</div>
+				</div>
+			</div>
+
 		<!-- tasks container -->
 		<div id="main-div" class="container-fluid" style="display: none;">
 			<div class="row tasks-row">
@@ -46,12 +94,12 @@
 					<div id="left-column-outter-div" class="col-md-4">
 
 						<!-- button to add a new card -->
-						<button type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('left');">
+						<button data-title="Add new card to this column." type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('left');">
 							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 						</button><span>&nbsp;&nbsp;</span>
 
 						<!-- column header -->
-						<h2 class="card-title cards-column-title">
+						<h2 data-title="Column title (click to edit)." class="card-title cards-column-title">
 							<input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Left Column" />
 						</h2>
 
@@ -67,13 +115,13 @@
 								<!-- card body -->
 								<div class="card-body">
 									<h5 class="card-title"><input class="card-title-input transparent heavy" maxlength="46" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Card Title" /></h5>
-									<div class="card-text limited-div-height">
+									<div class="card-text limited-div-height" style="overflow-y:auto;">
 										<div class="card-textarea card-description-input" contentEditable="true"></div>
 										<p class="placeholder">Card description</p>
 									</div>
 									
 									<!-- delete button -->
-									<button type="button" style="position:absolute; top:0px; right:0px;" class="btn btn-link" onclick="Taskigo.remove_card($(this).parent().parent());">
+									<button data-title="Remove this card." type="button" style="position:absolute; top:0px; right:0px;" class="btn btn-link" onclick="Taskigo.remove_card($(this).parent().parent());">
 										<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 									</button>
 
@@ -117,7 +165,9 @@
 									<div style="clear:both;"></div>
 
 									<!-- handle to resize card -->
-									<div style="position:relative; width: 100%; height: 10px; margin: 0px; margin-bottom:-14px; cursor: row-resize;" onclick="$(this).parent().find('.card-text').toggleClass('limited-div-height')"></div>
+									<div data-title="Expand card." class="expand-card-btn" style="color: #007bff; text-align:center; position:relative; width:100%; height:15px; margin:0px; margin-bottom:-14px; cursor:pointer; display:none;" onclick="Taskigo.expand_card(this)">
+										<span class="glyphicon glyphicon-chevron-down" style="transform: scale(1, 1); width:100%;" aria-hidden="true"></span>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -128,12 +178,12 @@
 					<div id="center-column-outter-div" class="col-md-4">
 						
 						<!-- button to add a new card -->
-						<button type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('center');">
+						<button data-title="Add new card to this column." type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('center');">
 							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 						</button><span>&nbsp;&nbsp;</span>
 
 						<!-- column header -->
-						<h2 class="card-title cards-column-title"><input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Center Column" /></h2>
+						<h2 data-title="Column title (click to edit)." class="card-title cards-column-title"><input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Center Column" /></h2>
 						
 						<!-- contain the actual cards -->
 						<div id="center-column" class="cards-container tasks-column"></div>
@@ -144,12 +194,12 @@
 					<div id="right-column-outter-div" class="col-md-4">
 
 						<!-- button to add a new card -->
-						<button type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('right');">
+						<button data-title="Add new card to this column." type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('right');">
 							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 						</button><span>&nbsp;&nbsp;</span>
 
 						<!-- column header -->
-						<h2 class="card-title cards-column-title"><input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Right Column" /></h2>
+						<h2 data-title="Column title (click to edit)." class="card-title cards-column-title"><input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Right Column" /></h2>
 
 						<!-- contain the actual cards -->
 						<div id="right-column" class="cards-container tasks-column"></div>
