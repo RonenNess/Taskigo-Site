@@ -63,8 +63,18 @@
 							<div class="tab-content">
 								<div id="opt-exports" class="tab-pane in active">
 									<p>Export / Import allow you to migrate boards between different computers or browsers, using files. <br />Its also a great way to create backups.</p>
-									<button type="button" class="btn btn-success" onclick="Taskigo.save_board_to_file();">Export Board</button>
-									<button type="button" class="btn btn-danger" accept=".json" onclick="document.getElementById('importFileInput').click();">Import Board</button>
+									<div class="row">
+										<div class="col-6">
+											<button style="width: 100%;" type="button" class="btn btn-success" onclick="Taskigo.save_board_to_file();">
+												<span class="glyphicon glyphicon-export" aria-hidden="true"></span> Export Board
+											</button>
+										</div>
+										<div class="col-6">
+											<button style="width: 100%;" type="button" class="btn btn-danger" accept=".json" onclick="document.getElementById('importFileInput').click();">
+												<span class="glyphicon glyphicon-import" aria-hidden="true"></span> Import Board
+											</button>
+										</div>
+									</div>
 									<input id="importFileInput" type="file" style="display:none;" />
 									<script>
 										document.getElementById('importFileInput').addEventListener('change', function handleFileSelect(event) { 
@@ -101,7 +111,7 @@
 															elem.style.zoom = val;
 														}
 
-														// do save
+														// request save
 														Taskigo.request_timely_save();
 													}
 												</script>
@@ -109,22 +119,54 @@
 										</div>
 
 										<!-- theme -->
-										<div class="form-group">
-											<label for="boardThemeInput">Theme:</label>
-											<select style="width:70%; display: inline-block; float:right;" class="form-control" id="boardThemeInput" onchange="Taskigo.set_theme($(this).val()); Taskigo.request_timely_save();">
-												<option value="bootstrap-theme.min">Default</option>
-												<option value="cosmo">Cosmo</option>
-												<option value="cyborg">Cyborg</option>
-												<option value="slate">Slate</option>
-												<option value="solar">Solar</option>
-												<option value="superhero">Superhero</option>
-											</select>
-											<div style="clear:both;"></div>
+										<div data-title="Select the colors theme of this board." class="form-group row">
+											<label class="col-2 col-form-label" for="boardThemeInput">Theme:</label>
+											<div class="col-10">
+												<select class="form-control" id="boardThemeInput" onchange="Taskigo.set_theme($(this).val()); Taskigo.request_timely_save();">
+													<option value="bootstrap-theme.min">Default</option>
+													<option value="cosmo">Cosmo</option>
+													<option value="cyborg">Cyborg</option>
+													<option value="slate">Slate</option>
+													<option value="solar">Solar</option>
+													<option value="superhero">Superhero</option>
+												</select>
+											</div>
 										</div>
+
+										<!-- collapse cards -->
+										<div data-title="If checked, cards with lots of text will be collapsed by default (can be extended with the bottom handle)." class="form-check">
+											<input class="form-check-input" type="checkbox" value="" onchange="toggleCardsCollapse();" id="collapseLargeCards" checked>
+											<label class="form-check-label" for="collapseLargeCards">
+											  Collapse Large Cards
+											</label>
+										</div>
+										<script>
+											// enable / disable cards collapse feature
+											function toggleCardsCollapse() {
+												if ($('#collapseLargeCards').is(":checked")) {
+													$('.disable-card-collapse').remove();
+												}
+												else {
+													$(document.body).append($("<style class='disable-card-collapse'> .limited-div-height { max-height: none !important; } </style>"));
+												}
+												Taskigo.request_timely_save();
+											}
+										</script>
 									</form>
 								</div>
 								<div id="opt-boards" class="tab-pane fade">
-									<p>TODO NOT READY YET.</p>
+									<p>Choose board to load:</p>
+									<div style="max-height:300px; overflow-y:auto;" id="boardsList"></div>
+									<br /><br /><button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-primary btn-sm" onclick="createNewBoard();">Create New Board</button>
+									<script>
+										function createNewBoard()
+										{
+											bootbox.prompt("New Board Name?", function(data) 
+											{ 
+												if (data) { location.href = "/?" + data; }
+											});
+										}
+									</script>
 								</div>
 								<div id="opt-help" class="tab-pane fade">
 									<p>TODO NOT READY YET.</p>
@@ -287,6 +329,17 @@
 			tlite(function(el) {
 				return $(el).data('title');
 			});
+		</script>
+
+		<!-- load boards list -->
+		<script>
+			(function() {
+				var boards = Taskigo.get_boards_list();
+				$("#boardsList").append($("<a href='/'>Default</a><br />"));
+				for (var i = 0; i < boards.length; ++i) {
+					$("#boardsList").append($("<a href='?" + boards[i] + "'>" + boards[i] + "</a><br />"));
+				}
+			})();
 		</script>
 
 	</body>

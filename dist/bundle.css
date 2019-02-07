@@ -256,6 +256,13 @@ input[type="text"].transparent
     min-height: 25px;
 }
 
+/* fix bootbox style bug */
+.bootbox-close-button
+{
+    position: absolute;
+    right: 15px;
+}
+
 /* card text container */
 .limited-div-height
 {
