@@ -384,6 +384,12 @@ a:hover
     display: inline-block;
 }
 
+/* expired deadline card effect */
+.expired-card
+{
+    box-shadow: 0px 0px 2px 2px red;
+}
+
 /* snackbar for messages */
 #snackbar {
     visibility: hidden;
@@ -427,6 +433,7 @@ a:hover
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
+    margin-bottom: 4px;
 }.tlite {
     background: #111;
     color: white;
@@ -454,6 +461,7 @@ a:hover
   
   .tlite-visible {
     visibility: visible;
+    z-index: 99999999999;
     opacity: 0.9;
   }
   

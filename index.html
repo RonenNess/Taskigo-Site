@@ -24,7 +24,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
 		<link rel="stylesheet" href="dist/bundle.min.css">
-		<link id="bootstrap-theme" rel="stylesheet" href="dist/bootstrap-theme.min.css">
+		<link id="bootstrap-theme" rel="stylesheet" href="dist/themes/bootstrap-theme.min.css">
 
 		<script src="client_config.js"></script>
 		<script src="dist/vendors.js"></script>
@@ -43,7 +43,7 @@
 		
 		<!-- options menu -->
 		<div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal" aria-hidden="true">
-				<div class="modal-dialog" role="document">
+			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Options</h5>
@@ -62,13 +62,66 @@
 							<br />
 							<div class="tab-content">
 								<div id="opt-exports" class="tab-pane in active">
-									<p>Export / Import allow you to migrate boards between different machines, by using files. <br />Its also a great way to create backups.</p>
-									<button type="button" class="btn btn-success">Export Board</button>
-									<button type="button" class="btn btn-danger">Import Board</button>
-									<p>TODO NOT READY YET.</p>
+									<p>Export / Import allow you to migrate boards between different computers or browsers, using files. <br />Its also a great way to create backups.</p>
+									<button type="button" class="btn btn-success" onclick="Taskigo.save_board_to_file();">Export Board</button>
+									<button type="button" class="btn btn-danger" accept=".json" onclick="document.getElementById('importFileInput').click();">Import Board</button>
+									<input id="importFileInput" type="file" style="display:none;" />
+									<script>
+										document.getElementById('importFileInput').addEventListener('change', function handleFileSelect(event) { 
+											$("#optionsModal").modal('hide');
+											bootbox.confirm("Importing board from file will override current board and permentantly delete everything in it. Continue?", function(result) {
+												if (result)
+												{
+													Taskigo.load_board_from_file(event.target.files[0]); 
+												}
+											});
+										}, false);
+									</script>
 								</div>
 								<div id="opt-display" class="tab-pane fade">
-									<p>TODO NOT READY YET.</p>
+									<form>
+										<!-- zoom -->
+										<div data-title="Change the zoom factor of the entire board." class="form-group row">
+											<label for="zoomInput" class="col-2 col-form-label">Zoom:</label>
+											<div class="col-10">
+												<input onclick="$(this).change();" onchange="setZoom(parseInt($(this).val()))" class="form-control" type="number" min="80" max="140" step="10" value="100" id="zoomInput">
+												<script>
+													// set board zoom
+													function setZoom(val)
+													{
+														// convert cal to 1.0 value and get element to scale
+														val = val / 100.0;
+														var elem = document.getElementById('main-div');
+
+														// set zoom based on css support
+														if (elem.style.zoom === undefined) {
+															elem.style.transform = "scale(" + val + "," + val + ")";
+														}
+														else {
+															elem.style.zoom = val;
+														}
+
+														// do save
+														Taskigo.request_timely_save();
+													}
+												</script>
+											</div>
+										</div>
+
+										<!-- theme -->
+										<div class="form-group">
+											<label for="boardThemeInput">Theme:</label>
+											<select style="width:70%; display: inline-block; float:right;" class="form-control" id="boardThemeInput" onchange="Taskigo.set_theme($(this).val()); Taskigo.request_timely_save();">
+												<option value="bootstrap-theme.min">Default</option>
+												<option value="cosmo">Cosmo</option>
+												<option value="cyborg">Cyborg</option>
+												<option value="slate">Slate</option>
+												<option value="solar">Solar</option>
+												<option value="superhero">Superhero</option>
+											</select>
+											<div style="clear:both;"></div>
+										</div>
+									</form>
 								</div>
 								<div id="opt-boards" class="tab-pane fade">
 									<p>TODO NOT READY YET.</p>
@@ -83,11 +136,11 @@
 					<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Done</button>
 					</div>
 				</div>
-				</div>
 			</div>
+		</div>
 
 		<!-- tasks container -->
-		<div id="main-div" class="container-fluid" style="display: none;">
+		<div id="main-div" class="container-fluid" style="display: none; transform-origin: top left;">
 			<div class="row tasks-row">
 				
 					<!-- left cards column -->
@@ -110,7 +163,7 @@
 							<div class="card" id="cards-prototype">
 
 								<!-- priority color stripe -->
-								<div id="card-color" style="width:12px; height:100%; position:absolute; display: block; cursor: pointer" class="btn-light" onclick="Taskigo.show_card_color_selection(this);"></div>
+								<div data-title="Pick priority color for this card." id="card-color" style="width:12px; height:100%; position:absolute; display: block; cursor: pointer" class="btn-light" onclick="Taskigo.show_card_color_selection(this);"></div>
 
 								<!-- card body -->
 								<div class="card-body">
