@@ -13,4 +13,6 @@ window._config = {
     // play this alarm sound when deadline expires (url or null to disable)
     play_alarm_sound: "alarm.wav",
 
+	// how many deleted cards we can keep
+    max_deleted_cards_to_keep: 50,
 }
