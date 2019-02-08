@@ -83,6 +83,14 @@
 								</div>
 								<div id="opt-display" class="tab-pane fade">
 									<form>
+										<!-- columns count -->
+										<div data-title="Set how many columns this board have." class="form-group row">
+											<label for="columnsCountInput" class="col-2 col-form-label">Columns:</label>
+											<div class="col-10">
+												<input onclick="$(this).change();" onchange="Taskigo.set_columns_count(parseInt($(this).val()), window._showDeleted); Taskigo.request_timely_save();" class="form-control" type="number" min="1" max="6" step="1" value="3" id="columnsCountInput">
+											</div>
+										</div>
+
 										<!-- zoom -->
 										<div data-title="Change the zoom factor of the entire board." class="form-group row">
 											<label for="zoomInput" class="col-2 col-form-label">Zoom:</label>
@@ -135,134 +143,107 @@
 			</div>
 		</div>
 
-		<!-- tasks container -->
-		<div id="main-div" class="container-fluid" style="display: none; transform-origin: top left;">
-			<div class="row tasks-row">
-				
-					<!-- left cards column -->
-					<div id="left-column-outer-div" class="col-md-4 column-outer-div">
+		<!-- contain prototype of things we want to duplicate -->
+		<div style="display: none;">
 
-						<!-- button to add a new card -->
-						<button data-title="Add new card to this column." type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('left');">
-							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-						</button><span>&nbsp;&nbsp;</span>
+			<!-- a new card prototype (removed once page loads) -->	
+			<div class="card" id="cards-prototype">
 
-						<!-- column header -->
-						<h2 data-title="Column title (click to edit)." class="card-title cards-column-title">
-							<input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Left Column" />
-						</h2>
+				<!-- priority color stripe -->
+				<div data-title="Pick priority color for this card." id="card-color" style="width:12px; height:100%; position:absolute; display: block; cursor: pointer" class="btn-light" onclick="Taskigo.show_card_color_selection(this);"></div>
 
-						<!-- contain the actual cards -->
-						<div id="left-column" class="cards-container tasks-column">
-
-							<!-- a new card prototype (removed once page loads) -->	
-							<div class="card" id="cards-prototype">
-
-								<!-- priority color stripe -->
-								<div data-title="Pick priority color for this card." id="card-color" style="width:12px; height:100%; position:absolute; display: block; cursor: pointer" class="btn-light" onclick="Taskigo.show_card_color_selection(this);"></div>
-
-								<!-- card body -->
-								<div class="card-body">
-									<h5 class="card-title"><input class="card-title-input transparent heavy" maxlength="46" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Card Title" /></h5>
-									<div class="card-text limited-div-height" style="overflow-y:auto;">
-										<div class="card-textarea card-description-input" contentEditable="true"></div>
-										<p class="placeholder">Card description</p>
-									</div>
-									
-									<!-- delete button -->
-									<button data-title="Remove this card." type="button" style="position:absolute; top:0px; right:0px;" class="btn btn-link" onclick="Taskigo.remove_card($(this).parent().parent());">
-										<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-									</button>
-
-									<!-- card deadline div (hidden unless there's a deadline) -->
-									<br />
-									<div class="deadline-div" style="width: 100%; display: inline-table; float:right;">
-
-										<!-- progressbar showing deadline time left -->
-										<div class="progress" style="width:calc(100% - 80px); display:inline-block; height:30px; background:#797676">
-											<div class="card-deadline-data" style="display:none;" data-deadline="0"></div>
-											<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; height: 100%; background-repeat: inherit;"></div>
-										</div>
-													
-										<!-- deadline buttons -->
-										<div style="float:right;">
-
-											<!-- button to add time to deadline -->
-											<button data-title="Open menu to edit deadline." href="#" class="btn btn-primary btn-sm" style="height: 30px;" onclick="$(this).parent().parent().find('.add-time-buttons').toggle();">
-												<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-											</button>
-
-											<!-- button to clear deadline -->
-											<button data-title="Clear deadline." href="#" class="btn btn-success btn-sm btn-end-deadline" disabled style="height: 30px;" onclick="Taskigo.add_time_to_card(this, -1000000000000000000000);">
-												<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-											</button>
-										</div>
-										<div style="clear:both;"></div>
-
-										<!-- show deadline date and time -->
-										<p class="deadline-text" style="margin: 0; position: absolute; margin-top: -34px; margin-left:10px; color:white;">No Deadline</p>
-
-										<!-- buttons to add time -->
-										<div class="add-time-buttons" style="display: none;">
-											<a data-title="Add 10 minutes to deadline." class="hide-sm hide-md" href="#" onclick="Taskigo.add_time_to_card(this, 10);">+10 Mins &nbsp;&nbsp;</a>
-											<a data-title="Add 1 hour to deadline." href="#" onclick="Taskigo.add_time_to_card(this, 60);">+Hour &nbsp;&nbsp;</a>
-											<a data-title="Add 1 day to deadline." href="#" onclick="Taskigo.add_time_to_card(this, 60*24);">+Day &nbsp;&nbsp;</a>
-											<a data-title="Add 1 week to deadline." class="hide-sm" href="#" onclick="Taskigo.add_time_to_card(this, 60*24*7);">+Week &nbsp;&nbsp;</a>
-											<a data-title="Add 1 month to deadline." href="#" onclick="Taskigo.add_time_to_card(this, 60*24*30);">+Month &nbsp;&nbsp;</a>
-										</div>
-									</div>
-									<div style="clear:both;"></div>
-
-									<!-- handle to resize card -->
-									<div data-title="Expand card." class="expand-card-btn" style="color: #007bff; text-align:center; position:relative; width:100%; height:15px; margin:0px; margin-bottom:-14px; cursor:pointer; display:none;" onclick="Taskigo.expand_card(this)">
-										<span class="glyphicon glyphicon-chevron-down" style="transform: scale(1, 1); width:100%;" aria-hidden="true"></span>
-									</div>
-								</div>
-							</div>
-						</div>
-						<br /><br />
+				<!-- card body -->
+				<div class="card-body">
+					<h5 class="card-title"><input class="card-title-input transparent heavy" maxlength="46" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Card Title" /></h5>
+					<div class="card-text limited-div-height" style="overflow-y:auto;">
+						<div class="card-textarea card-description-input" contentEditable="true"></div>
+						<p class="placeholder">Card description</p>
 					</div>
 					
-					<!-- center cards column -->
-					<div id="center-column-outer-div" class="column-outer-div col-md-4">
-						
-						<!-- button to add a new card -->
-						<button data-title="Add new card to this column." type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('center');">
-							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-						</button><span>&nbsp;&nbsp;</span>
+					<!-- delete button -->
+					<button data-title="Remove this card." type="button" style="position:absolute; top:0px; right:0px;" class="btn btn-link" onclick="Taskigo.remove_card($(this).parent().parent());">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</button>
 
-						<!-- column header -->
-						<h2 data-title="Column title (click to edit)." class="card-title cards-column-title"><input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Center Column" /></h2>
-						
-						<!-- contain the actual cards -->
-						<div id="center-column" class="cards-container tasks-column"></div>
-						<br /><br />
+					<!-- card deadline div (hidden unless there's a deadline) -->
+					<br />
+					<div class="deadline-div" style="width: 100%; display: inline-table; float:right;">
+
+						<!-- progressbar showing deadline time left -->
+						<div class="progress" style="width:calc(100% - 80px); display:inline-block; height:30px; background:#797676">
+							<div class="card-deadline-data" style="display:none;" data-deadline="0"></div>
+							<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; height: 100%; background-repeat: inherit;"></div>
+						</div>
+									
+						<!-- deadline buttons -->
+						<div style="float:right;">
+
+							<!-- button to add time to deadline -->
+							<button data-title="Open menu to edit deadline." href="#" class="btn btn-primary btn-sm" style="height: 30px;" onclick="$(this).parent().parent().find('.add-time-buttons').toggle();">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							</button>
+
+							<!-- button to clear deadline -->
+							<button data-title="Clear deadline." href="#" class="btn btn-success btn-sm btn-end-deadline" disabled style="height: 30px;" onclick="Taskigo.add_time_to_card(this, -1000000000000000000000);">
+								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+							</button>
+						</div>
+						<div style="clear:both;"></div>
+
+						<!-- show deadline date and time -->
+						<p class="deadline-text" style="margin: 0; position: absolute; margin-top: -34px; margin-left:10px; color:white;">No Deadline</p>
+
+						<!-- buttons to add time -->
+						<div class="add-time-buttons" style="display: none;">
+							<a data-title="Add 10 minutes to deadline." class="hide-sm hide-md" href="#" onclick="Taskigo.add_time_to_card(this, 10);">+10 Mins &nbsp;&nbsp;</a>
+							<a data-title="Add 1 hour to deadline." href="#" onclick="Taskigo.add_time_to_card(this, 60);">+Hour &nbsp;&nbsp;</a>
+							<a data-title="Add 1 day to deadline." href="#" onclick="Taskigo.add_time_to_card(this, 60*24);">+Day &nbsp;&nbsp;</a>
+							<a data-title="Add 1 week to deadline." class="hide-sm" href="#" onclick="Taskigo.add_time_to_card(this, 60*24*7);">+Week &nbsp;&nbsp;</a>
+							<a data-title="Add 1 month to deadline." href="#" onclick="Taskigo.add_time_to_card(this, 60*24*30);">+Month &nbsp;&nbsp;</a>
+						</div>
 					</div>
+					<div style="clear:both;"></div>
 
-					<!-- right cards column -->
-					<div id="right-column-outer-div" class="column-outer-div col-md-4">
-
-						<!-- button to add a new card -->
-						<button data-title="Add new card to this column." type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('right');">
-							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-						</button><span>&nbsp;&nbsp;</span>
-
-						<!-- column header -->
-						<h2 data-title="Column title (click to edit)." class="card-title cards-column-title"><input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Right Column" /></h2>
-
-						<!-- contain the actual cards -->
-						<div id="right-column" class="cards-container tasks-column"></div>
-						<br /><br />
+					<!-- handle to resize card -->
+					<div data-title="Expand card." class="expand-card-btn" style="color: #007bff; text-align:center; position:relative; width:100%; height:15px; margin:0px; margin-bottom:-14px; cursor:pointer; display:none;" onclick="Taskigo.expand_card(this)">
+						<span class="glyphicon glyphicon-chevron-down" style="transform: scale(1, 1); width:100%;" aria-hidden="true"></span>
 					</div>
+				</div>
+			</div>
+			
+			<!-- column prototype -->
+			<div id="column-prototype-div" class="col-md-4 column-outer-div">
+
+				<!-- button to add a new card -->
+				<button data-title="Add new card to this column." type="button" class="btn btn-success btn-sm" style="margin-top: -15px;" >
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+				</button><span>&nbsp;&nbsp;</span>
+
+				<!-- column header -->
+				<h2 data-title="Column title (click to edit)." class="card-title cards-column-title">
+					<input class="column-title-input transparent heavy" onkeyup="Taskigo.request_timely_save();" type="text" placeholder="Column Name" />
+				</h2>
+
+				<!-- contain the actual cards -->
+				<div id="xxx-column" class="cards-container tasks-column">
+
+				</div>
+				<br /><br />
+			</div>
+		</div>
+
+		<!-- main columns container -->
+		<div id="main-div" class="container-fluid" style="display: none; transform-origin: top left;">
+			<div id="columns-container" class="row tasks-row">
 				
 					<!-- special hidden column for deleted cards -->
-					<div id="deleted-column-outer-div" class="column-outer-div col-md-4" style="display:none; opacity: 0.5">
+					<div id="deleted-column-outer-div" class="column-outer-div col-md-4" style="display:none; opacity:0.6">
 
 						<!-- deleted cards title -->
 						<h2 data-title="Deleted cards column. Cannot change title." class="card-title cards-column-title"><input class="column-title-input transparent heavy" disabled type="text" placeholder="Deleted Cards" /></h2>
 
 						<!-- contain the actual cards -->
-						<div id="deleted-column" disabled class="cards-container tasks-column" style=""></div>
+						<div id="deleted-column" disabled class="cards-container tasks-column"></div>
 						<br /><br />
 
 					</div>
@@ -285,6 +266,28 @@
 
 		<!-- snackbar -->
 		<div id="snackbar" style="z-index: 10000;"><div id="snackbar-text" class="alert alert-primary" role="alert">Snackbar Text</div></div>
+
+		<!-- create all columns -->
+		<script>
+
+			// create all columns
+			var colProto = $('#column-prototype-div');
+			for (var i = 0; i < _config.max_columns_count; ++i) {
+				var newColumn = colProto.clone();
+				newColumn[0].id = i + "-column-outer-div";
+				newColumn.find(".cards-container")[0].id = i + "-column";
+				newColumn.find(".column-title-input").attr('placeholder', "Column " + (i + 1));
+				(function(index) {
+					newColumn.find("button").first().click(function() {
+						Taskigo.new_card(index);
+					});
+				})(i);
+				$("#columns-container").append(newColumn);
+			}
+
+			// make deleted cards column last
+			$("#columns-container").append($("#deleted-column-outer-div").remove());
+		</script>
 
 		<!-- import main code script -->
 		<script src="dist/bundle.js"></script>
