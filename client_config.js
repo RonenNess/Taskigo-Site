@@ -1,8 +1,11 @@
 // set local client-side config
 window._config = {
 
-    // if true, will use cookies and localstorage instead of server to store data.
+    // if true, will use cookies and localstorage instead of server to store data
     use_browser_storage: true,
+	
+	// how many columns we can have
+	max_columns_count: 6,
 
     // max cards we allow on all columns
     max_cards: 500,
