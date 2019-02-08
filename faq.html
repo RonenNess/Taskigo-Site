@@ -1,0 +1,89 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+	<head>
+
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43062336-11"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-43062336-11');
+		</script>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Taskigo - FAQ</title>
+		<meta name="description" content="Easy, fast and efficient Personal Task Management.">
+		<meta name="author" content="Ronen Ness">
+		<meta name="keywords" content = "productivity, tasks, projects, management, notes, time management">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<link rel="stylesheet" href="dist/bundle.min.css">
+		<link id="bootstrap-theme" rel="stylesheet" href="dist/themes/bootstrap-theme.min.css">
+
+		<script src="client_config.js"></script>
+		<script src="dist/vendors.js"></script>
+
+		<link rel="icon" type="image/png" href="icon.png" />
+
+		<!--[if lt IE 9]>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+				<script>window.html5 || document.write('<script src="js/vendor/html5shiv.js"><\/script>')</script>
+		<![endif]-->
+
+		<style>
+			.subtitle
+			{
+				font-style: italic;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div>
+				<h1>Taskigo FAQ</h1>
+				<hr />
+				
+				<h2 class="subtitle">General</h2>
+				<h5>What is Taskigo?</h5>
+				<p>Taskigo is a lightweight tasks & time management tool.<br />
+				Its main power is simplicity and ease of access (no registration required).</p>
+				<h5>Is it free?</h5>
+				<p>Yes.</p>
+				<h5>What is it good for?</h5>
+				<p>Taskigo works best to manage small projects or for when your job involves having lots of interrupts and side-tasks you need to handle at different times.</p>
+				<h5>How do I use it?</h5>
+				<p>First define the 3 columns (categories) you think are most relevant to the type of tasks you want to manage.<br />
+				Then whenever a new task arise, create a card in the corresponding column and set deadline if needed. When task is done, delete with with the X button.</p>
+				<h5>Can I backup my data?</h5>
+				<p>Yes, and its recommended. Open the options menu (bottom-right icon) and click on 'Export' to save your board as a local file.</p>
+				<h5>Can I migrate my board to a different computer / browser?</h5>
+				<p>Yes, use the Export / Import option to do that (export from source machine and import into target where you want board to appear).</p>
+				<h5>Can I recover deleted cards?</h5>
+				<p>Yes, cards you delete are kept in a hidden column and you can restore them from it. Click on the bottom-right button with the trash-can icon to see the deleted cards.<br />
+				Note: Taskigo will not keep deleted cards forever, and if you delete them from the deleted column they will be deleted permanently.</p>
+				<h5>Can I create multiple boards?</h5>
+				<p>Yes, through the options menu (bottom-right icon) or by adding URL param with the new board's name.</p>
+
+				<h2 class="subtitle">Privacy</h2>
+				<h5>What data do you collect on me?</h5>
+				<p>Nothing. Not even your cards, everything is stored locally using localstorage and cookies for backup. <br />
+					Only data collected is 'google analytics' basic page tracking.</p>
+				<h5>Can anyone else see my board?</h5>
+				<p>If someone opens your browser from the same computer and user, he will see your board.</p>
+				<h5>Can I use incognito mode?</h5>
+				<p>Yes but you won't be able to save any data. Your board will be lost as soon as you close the browser.</p>
+					
+				<h2 class="subtitle">Troubleshooting</h2>
+				<h5>My board is gone, why?</h5>
+				<p>All board's data is stored locally in the browser's local storage, if you clear history your data will be lost.<br />
+				Also you need to use the same browser and user to access your data. Different browser / user = different board.</p>
+	
+			</div>
+		</div>
+	</body>
+</html>

@@ -8,11 +8,10 @@
 		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43062336-11"></script>
 		<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-
-		gtag('config', 'UA-43062336-11');
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-43062336-11');
 		</script>
 
 		<meta charset="utf-8">
@@ -40,7 +39,12 @@
 
 		<!-- options button -->
 		<img data-title="Open options menu." src="icon.png" class="options-button" data-toggle="modal" data-target="#optionsModal" />
-		
+
+		<!-- toggle deleted column button -->
+		<button data-title="Show / hide deleted cards column." type="button" class="btn btn-primary show-deleted-column-button" accept=".json" onclick="toggleDeletedCardsColumn();">
+			<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+		</button>
+
 		<!-- options menu -->
 		<div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -76,17 +80,6 @@
 										</div>
 									</div>
 									<input id="importFileInput" type="file" style="display:none;" />
-									<script>
-										document.getElementById('importFileInput').addEventListener('change', function handleFileSelect(event) { 
-											$("#optionsModal").modal('hide');
-											bootbox.confirm("Importing board from file will override current board and permentantly delete everything in it. Continue?", function(result) {
-												if (result)
-												{
-													Taskigo.load_board_from_file(event.target.files[0]); 
-												}
-											});
-										}, false);
-									</script>
 								</div>
 								<div id="opt-display" class="tab-pane fade">
 									<form>
@@ -95,26 +88,6 @@
 											<label for="zoomInput" class="col-2 col-form-label">Zoom:</label>
 											<div class="col-10">
 												<input onclick="$(this).change();" onchange="setZoom(parseInt($(this).val()))" class="form-control" type="number" min="80" max="140" step="10" value="100" id="zoomInput">
-												<script>
-													// set board zoom
-													function setZoom(val)
-													{
-														// convert cal to 1.0 value and get element to scale
-														val = val / 100.0;
-														var elem = document.getElementById('main-div');
-
-														// set zoom based on css support
-														if (elem.style.zoom === undefined) {
-															elem.style.transform = "scale(" + val + "," + val + ")";
-														}
-														else {
-															elem.style.zoom = val;
-														}
-
-														// request save
-														Taskigo.request_timely_save();
-													}
-												</script>
 											</div>
 										</div>
 
@@ -140,36 +113,17 @@
 											  Collapse Large Cards
 											</label>
 										</div>
-										<script>
-											// enable / disable cards collapse feature
-											function toggleCardsCollapse() {
-												if ($('#collapseLargeCards').is(":checked")) {
-													$('.disable-card-collapse').remove();
-												}
-												else {
-													$(document.body).append($("<style class='disable-card-collapse'> .limited-div-height { max-height: none !important; } </style>"));
-												}
-												Taskigo.request_timely_save();
-											}
-										</script>
 									</form>
 								</div>
 								<div id="opt-boards" class="tab-pane fade">
 									<p>Choose board to load:</p>
 									<div style="max-height:300px; overflow-y:auto;" id="boardsList"></div>
-									<br /><br /><button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-primary btn-sm" onclick="createNewBoard();">Create New Board</button>
-									<script>
-										function createNewBoard()
-										{
-											bootbox.prompt("New Board Name?", function(data) 
-											{ 
-												if (data) { location.href = "/?" + data; }
-											});
-										}
-									</script>
+									<hr /><button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-primary btn-sm" onclick="createNewBoard();">Create New Board</button>
 								</div>
 								<div id="opt-help" class="tab-pane fade">
-									<p>TODO NOT READY YET.</p>
+									<button style="width:100%; margin-bottom: 4px;" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-primary" onclick="showAbout();">About</button>
+									<a href="faq.html"><button style="width:100%; margin-bottom: 4px;" type="button" class="btn btn-primary">FAQ</button></a>
+									<button style="width:100%; margin-bottom: 4px;" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-primary" onclick="showSupport();">Support</button>
 								</div>
 							</div>
 						</div>
@@ -186,7 +140,7 @@
 			<div class="row tasks-row">
 				
 					<!-- left cards column -->
-					<div id="left-column-outter-div" class="col-md-4">
+					<div id="left-column-outer-div" class="col-md-4 column-outer-div">
 
 						<!-- button to add a new card -->
 						<button data-title="Add new card to this column." type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('left');">
@@ -270,7 +224,7 @@
 					</div>
 					
 					<!-- center cards column -->
-					<div id="center-column-outter-div" class="col-md-4">
+					<div id="center-column-outer-div" class="column-outer-div col-md-4">
 						
 						<!-- button to add a new card -->
 						<button data-title="Add new card to this column." type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('center');">
@@ -286,7 +240,7 @@
 					</div>
 
 					<!-- right cards column -->
-					<div id="right-column-outter-div" class="col-md-4">
+					<div id="right-column-outer-div" class="column-outer-div col-md-4">
 
 						<!-- button to add a new card -->
 						<button data-title="Add new card to this column." type="button" class="btn btn-success" style="margin-top: -15px;" onclick="Taskigo.new_card('right');">
@@ -301,6 +255,17 @@
 						<br /><br />
 					</div>
 				
+					<!-- special hidden column for deleted cards -->
+					<div id="deleted-column-outer-div" class="column-outer-div col-md-4" style="display:none; opacity: 0.5">
+
+						<!-- deleted cards title -->
+						<h2 data-title="Deleted cards column. Cannot change title." class="card-title cards-column-title"><input class="column-title-input transparent heavy" disabled type="text" placeholder="Deleted Cards" /></h2>
+
+						<!-- contain the actual cards -->
+						<div id="deleted-column" disabled class="cards-container tasks-column" style=""></div>
+						<br /><br />
+
+					</div>
 			</div>
 		</div>
 
@@ -323,24 +288,6 @@
 
 		<!-- import main code script -->
 		<script src="dist/bundle.js"></script>
-
-		<!-- init tlite tooltip -->
-		<script>
-			tlite(function(el) {
-				return $(el).data('title');
-			});
-		</script>
-
-		<!-- load boards list -->
-		<script>
-			(function() {
-				var boards = Taskigo.get_boards_list();
-				$("#boardsList").append($("<a href='/'>Default</a><br />"));
-				for (var i = 0; i < boards.length; ++i) {
-					$("#boardsList").append($("<a href='?" + boards[i] + "'>" + boards[i] + "</a><br />"));
-				}
-			})();
-		</script>
 
 	</body>
 </html>

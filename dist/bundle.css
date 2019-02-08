@@ -379,6 +379,18 @@ a:hover
             box-shadow: 0 0 5px blue;
 }
 
+.show-deleted-column-button
+{
+    width:46px; 
+    height:36px; 
+    position:fixed; 
+    z-index:100000; 
+    right:90px; 
+    bottom:20px; 
+    display: inline-block;
+    cursor:pointer;
+}
+
 /* icon image integrated inside text */
 .icon-in-text {
     width: 16px;
